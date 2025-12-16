@@ -14,7 +14,7 @@ class Staff(Base):
     active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
 
-    user: Mapped["User" | None] = relationship(back_populates="staff", uselist=False)
+    user: Mapped["User"] = relationship(back_populates="staff", uselist=False)
     rota_entries: Mapped[list["RotaEntry"]] = relationship(back_populates="staff")
 
 class User(Base):
@@ -27,7 +27,7 @@ class User(Base):
     staff_id: Mapped[int | None] = mapped_column(ForeignKey("staff.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
 
-    staff: Mapped["Staff" | None] = relationship(back_populates="user")
+    staff: Mapped["Staff"] = relationship(back_populates="user")
 
 class ShiftType(Base):
     __tablename__ = "shift_types"
@@ -52,4 +52,5 @@ class RotaEntry(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     shift_type: Mapped["ShiftType"] = relationship(back_populates="rota_entries")
-    staff: Mapped["Staff" | None] = relationship(back_populates="rota_entries")
+    staff: Mapped["Staff"] = relationship(back_populates="rota_entries")
+
