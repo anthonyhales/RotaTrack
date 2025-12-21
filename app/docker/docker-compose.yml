@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  trackrota:
+    container_name: trackrota
+    image: python:3.11-slim
+    restart: unless-stopped
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - trackrota-data:/data
+
+    environment:
+      APP_VERSION: "1.1.1"
+      APP_TIMEZONE: "Europe/London"
+
+      APP_BOOTSTRAP_ADMIN_EMAIL: "admin@example.com"
+      APP_BOOTSTRAP_ADMIN_PASSWORD: "change-me"
+
+    command: >
+      sh -c "
+      apt-get update &&
+      apt-get install -y git &&
+      git clone https://github.com/anthonyhales/TrackRota.git /app &&
+      pip install --no-cache-dir -r /app/requirements.txt &&
+      cd /app &&
+      uvicorn app.main:app --host 0.0.0.0 --port 8000
+      "
+
+volumes:
+  trackrota-data:
